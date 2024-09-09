@@ -1,0 +1,28 @@
+[package]
+name = "void-mod-manager"
+version = "0.1.1"
+description = "A Tauri App"
+authors = ["Ghoul"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "1", features = [] }
+
+[dependencies]
+tauri = { version = "1", features = ["shell-open"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+reqwest = { version = "0.12", features = ["json"] }
+tokio = { version = "1", features = ["full"] }
+dirs = "5.0.1"
+log = { version = "0.4.22", features = ["kv"] }
+env_logger = "0.11.5"
+steamlocate = "1.2.1"
+zip = "2.2.0"
+futures = "0.3.30"
+
+[features]
+# This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]

@@ -1,0 +1,22 @@
+void-mod-manager (0.1.1) unstable; urgency=low
+
+    * Added Changelog
+    * Changed the way the "Get mods" page looks
+    * Added new loading screen for "Get mods"
+    * Techincal changes to how the "Get mods" page is rendered
+    * Changed the "Settings" page
+    * Added new "Details sheet"
+    * Clicking on mods now no longer show their Details
+    * Checkbox is now center aligned in Settings
+    * Added icons to buttons
+    * Main menu now shows games installed along with an icon. (Shows a warning when Icon cannot be found)
+    * You can filter your installed games by clicking the "Select filter", which gives you the option of "All" or "Supported only" (Only PAYDAY 2)
+    * Settings that are currently unimplimented have been removed from the "Settings" page
+    * Added an error screen when something goes wrong when loading "mods"
+    * Added toast notifications for mod states e.g. Downloading, Downloaded, Error, etc
+    * Added debug options (on "Get mods" page)
+    * Added new setting: "show_debug_options" default: false
+    * settings.rs will now check for any missing settings and automatically fill them with their defaults
+    * Debug toasts now only appear when "show_debug_options" is enabled
+
+    -- Ghoul
