@@ -15,12 +15,12 @@ function SettingsPage() {
   }
 
   const [settings, setSettings] = useState<AppSettings | null>(null);
-
   useEffect(() => {
     loadSettings().then(setSettings);
+    if (!settings) {
+      return;
+    }
   }, []);
-
-  console.log(settings);
 
   return (
     <div className="p-4">
@@ -78,36 +78,17 @@ function SettingsPage() {
             }
           }}
         />
-        {/* <SettingsCheckbox
-          title="Use symlinks"
-          description="Changes it so all mods are stored in one folder (~/.void/pd2/mods). This also saves storage, and having to re-download mods on other profiles"
-        /> */}
-        {/* <SettingsCheckbox
-          title="Allow experimental features"
-          description="Allows experiments to be enabled"
-        /> */}
-        {/* <SettingsCheckbox
-          title="Enable profiles"
-          description="Allows switching between different profiles"
-          experimental
-        /> */}
-        {/* <SettingsCheckbox
-          title="Use side NavBar"
-          description="Changes the tabs at the top to be a navbar on the side"
-        /> */}
-
-        {/* <SettingsSelect
-          title="Change active profile"
-          description="Changes the currently active profile to the profile displayed above"
-          experimental
-          placeholder="You have no profiles."
-        /> */}
 
         <SettingsInput
           title="Mod download path"
           description="The path that mods are downloaded to"
           experimental
-          placeholder="You have no profiles."
+          placeholder="Something went wrong"
+          onChange={(newText) => {
+            if (settings) {
+              setSettings({ ...settings, download_path: newText });
+            }
+          }}
           value={settings?.download_path}
         />
       </div>
