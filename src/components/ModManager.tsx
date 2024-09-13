@@ -4,11 +4,12 @@ import "../App.css";
 import { Button } from "./ui/button";
 import { listen } from "@tauri-apps/api/event";
 import { toast } from "sonner";
-import { AppSettings, ModInfo } from "../lib/types";
+import { AppSettings, GameInformation, ModInfo } from "../lib/types";
 import ModItem from "./ModItem";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import GameSelector from "./GameSelector";
 
 function ModManager() {
   // State variables
@@ -19,6 +20,9 @@ function ModManager() {
   const [errorMessage, setErrorMessage] = useState("Unknown");
   const [notifyEventHandled, setNotifyEventHandled] = useState(false);
   const [settings, setSettings] = useState<AppSettings>();
+  const [selectedGame, setSelectedGame] = useState<GameInformation | null>(
+    null
+  );
 
   // Effect hook to load mods and set up event listeners
   useEffect(() => {
@@ -121,7 +125,7 @@ function ModManager() {
     <div className="">
       {/* Loader component displayed when loading */}
       {isLoading ? (
-        <div className="flex flex-col gap-5 justify-center items-center w-screen h-screen">
+        <div className="flex flex-col items-center justify-center w-screen h-screen gap-5">
           <h1 className="text-2xl font-bold">The mods are on the way...</h1>
           <div
             className={`loader${settings?.theme == "Light" ? "-light" : ""}`}
@@ -131,7 +135,7 @@ function ModManager() {
 
       {/* Error message displayed when an error occurs */}
       {hasErrored ? (
-        <div className="flex flex-col gap-5 justify-center items-center w-screen h-screen">
+        <div className="flex flex-col items-center justify-center w-screen h-screen gap-5">
           <h1 className="text-3xl font-extrabold">(╯°□°）╯︵ ┻━┻</h1>
           <p className="text-lg">{errorMessage}</p>
           <Button
@@ -173,23 +177,23 @@ function ModManager() {
                   </h4>
                 </div>
                 <div className="grid gap-2">
-                  <div className="grid grid-cols-3 gap-4 items-center">
+                  <div className="grid items-center grid-cols-3 gap-4">
                     <Label htmlFor="width">Error title</Label>
                     <Input
                       id="width"
                       defaultValue="(╯°□°）╯︵ ┻━┻"
                       disabled={true}
-                      className="col-span-2 h-8"
+                      className="h-8 col-span-2"
                     />
                   </div>
-                  <div className="grid grid-cols-3 gap-4 items-center">
+                  <div className="grid items-center grid-cols-3 gap-4">
                     <Label htmlFor="maxWidth">Error message</Label>
                     <Input
                       id="maxWidth"
                       defaultValue={
                         errorMessage ? errorMessage : "You clicked the button!"
                       }
-                      className="col-span-2 h-8"
+                      className="h-8 col-span-2"
                       onChange={(event) => {
                         setErrorMessage(event.target.value);
                       }}
@@ -209,11 +213,34 @@ function ModManager() {
         </div>
       ) : null}
 
-      <div className="grid gap-8 p-6">
-        {mods.map((mod: ModInfo, _) => (
-          <ModItem mod={mod} status={status} />
-        ))}
-      </div>
+      <GameSelector onGameSelect={setSelectedGame} />
+      {selectedGame?.app_id == 218620 ? (
+        <div className="grid gap-8 p-6">
+          {mods.map((mod: ModInfo, _) => (
+            <ModItem mod={mod} status={status} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center w-screen h-screen gap-5">
+          {selectedGame ? (
+            <>
+              <h1 className="text-2xl font-bold">
+                Sorry, {selectedGame?.name} is not supported yet!
+              </h1>
+              <p>
+                We are working on adding support for more games. In the
+                meantime, you can check out the mods that are currently
+                supported. If you want to request support for your game, you can
+                make a issue on github!
+              </p>
+            </>
+          ) : (
+            <h1 className="text-2xl font-bold">
+              Select a game to get started!
+            </h1>
+          )}
+        </div>
+      )}
     </div>
   );
 }
