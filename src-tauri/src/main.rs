@@ -8,8 +8,10 @@ use settings::{load_settings, save_settings};
 use tauri::Window;
 
 mod games;
+mod lib;
 mod mod_manager;
 mod settings;
+mod test;
 
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #[cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
