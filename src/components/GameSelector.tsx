@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { GameInformation } from "../lib/types";
+import { AppSettings, GameInformation } from "../lib/types";
 import { invoke } from "@tauri-apps/api/tauri";
 import {
   CheckCircle2Icon,
   GamepadIcon,
   EyeIcon,
   EyeOffIcon,
+  BugIcon,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
@@ -23,12 +24,20 @@ function GameSelector({ onGameSelect }: GameSelectorProps) {
   );
   const [isOpen, setIsOpen] = useState(false);
   const [showUnsupported, setShowUnsupported] = useState(false);
+  const [settings, setSettings] = useState<AppSettings>();
+  const [showDebug, setShowDebug] = useState(false);
 
   useEffect(() => {
     async function getGameInfo() {
       const games: GameInformation[] = await invoke("get_steam_games");
       setInstalledGames(games);
     }
+
+    async function loadSettings() {
+      setSettings(await invoke("load_settings"));
+    }
+
+    loadSettings();
     getGameInfo();
   }, []);
 
@@ -42,6 +51,10 @@ function GameSelector({ onGameSelect }: GameSelectorProps) {
   const filteredGames = showUnsupported
     ? installedGames
     : installedGames.filter((game) => game.app_id === 218620);
+
+  const supportedGamesExist = installedGames.some(
+    (game) => game.app_id === 218620
+  );
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -61,22 +74,39 @@ function GameSelector({ onGameSelect }: GameSelectorProps) {
           <p className="text-sm text-muted-foreground">
             Choose the game you want to manage mods for:
           </p>
-          <Toggle
-            className="mt-3"
-            pressed={showUnsupported}
-            onPressedChange={setShowUnsupported}
-          >
-            {showUnsupported ? (
-              <EyeOffIcon className="w-4 h-4 mr-2" />
-            ) : (
-              <EyeIcon className="w-4 h-4 mr-2" />
-            )}
-            {showUnsupported ? "Hide Unsupported" : "Show All"}
-          </Toggle>
+          {supportedGamesExist ? (
+            <Toggle
+              className="mt-3"
+              pressed={showUnsupported}
+              onPressedChange={setShowUnsupported}
+            >
+              {showUnsupported ? (
+                <EyeOffIcon className="w-4 h-4 mr-2" />
+              ) : (
+                <EyeIcon className="w-4 h-4 mr-2" />
+              )}
+              {showUnsupported ? "Hide Unsupported" : "Show All"}
+            </Toggle>
+          ) : (
+            <div className="mt-3">
+              <p className="mb-2 text-sm text-muted-foreground">
+                No supported games found.
+              </p>
+              <p>
+                Did you know, you can force show them by turning on debug mode?
+              </p>
+              {settings?.show_debug_options ? (
+                <Toggle pressed={showDebug} onPressedChange={setShowDebug}>
+                  <BugIcon className="w-4 h-4 mr-2" />
+                  Show All Games (Debug)
+                </Toggle>
+              ) : null}
+            </div>
+          )}
         </div>
         <div className="overflow-scroll max-h-[300px]">
           <div className="grid gap-4 p-4">
-            {filteredGames.map((game) => (
+            {(showDebug ? installedGames : filteredGames).map((game) => (
               <Button
                 key={game.app_id}
                 className={`justify-start w-full p-4 ${
