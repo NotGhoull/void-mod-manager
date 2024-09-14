@@ -1,8 +1,5 @@
 // use game_api::{download_mod_from_id, get_mods};
-use games::{
-    payday2::{Mod, Payday2API},
-    GameModAPI,
-};
+use games::{payday2::Payday2API, GameModAPI, Mod, ModWithMeta};
 use log::{debug, error, info, trace, warn};
 use settings::{load_settings, save_settings};
 use tauri::Window;
@@ -16,8 +13,10 @@ mod test;
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #[cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+
+// TODO: Make this take in more arguments - Page, amount to show
 #[tauri::command]
-async fn get_mods() -> Vec<Mod> {
+async fn get_mods() -> Vec<ModWithMeta> {
     info!("Getting data...");
     return Payday2API.fetch_mods().await;
 }

@@ -1,4 +1,5 @@
 use std::{
+    collections::HashMap,
     fs::{create_dir_all, File},
     io::{self, copy, Cursor},
     path::{Path, PathBuf},
@@ -6,6 +7,7 @@ use std::{
 };
 
 use futures::future::BoxFuture;
+use serde_json::json;
 use tokio::fs;
 
 use log::{debug, error, info, trace, warn};
@@ -13,9 +15,9 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use zip::ZipArchive;
 
-use crate::{lib::unzip_mod, settings::load_settings};
+use crate::{games::ModPageMetaData, lib::unzip_mod, settings::load_settings};
 
-use super::GameModAPI;
+use super::{GameModAPI, Mod, ModWithMeta};
 pub struct Payday2API;
 
 // TODO: Remove redundant traits
@@ -40,7 +42,7 @@ struct UserData {
 }
 
 #[derive(Deserialize, Serialize, Debug)]
-pub struct Mod {
+pub struct Payday2Mod {
     id: u32,
     name: String,
     desc: String,
@@ -53,7 +55,18 @@ pub struct Mod {
 
 #[derive(Deserialize, Serialize, Debug)]
 struct APIResponse {
-    data: Vec<Mod>,
+    data: Vec<Payday2Mod>,
+    meta: Payday2ModMeta,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+struct Payday2ModMeta {
+    current_page: u32,
+    from: u32,
+    last_page: u32,
+    per_page: u32,
+    to: u32,
+    total: u32,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -69,9 +82,22 @@ struct ModDownloadData {
 }
 
 impl GameModAPI for Payday2API {
-    async fn fetch_mods(&self) -> Vec<Mod> {
+    async fn fetch_mods(&self) -> Vec<ModWithMeta> {
+        // Create a client to use for connections
+        let client = reqwest::Client::new();
+        let body = json!({
+            "limit": 2
+        });
+
         info!("Attempting to fetch mods from ModworkshopAPI");
-        let response = match reqwest::get("https://api.modworkshop.net/games/payday-2/mods").await {
+        let response = match client
+            .get("https://api.modworkshop.net/games/payday-2/mods")
+            .header("Content-Type", "application/json")
+            .header("Accept", "application/json")
+            .body(body.to_string())
+            .send()
+            .await
+        {
             Ok(resp) => resp,
             Err(e) => {
                 error!("Failed to get modworkshop API: {e}");
@@ -92,9 +118,39 @@ impl GameModAPI for Payday2API {
         // Attempt to parse the text to JSON
         let parsed_response: Result<APIResponse, serde_json::Error> = serde_json::from_str(&text);
         match parsed_response {
-            Ok(parsed) => parsed.data,
+            Ok(parsed) => {
+                // Parse the Payday2Mods into our universal Mod struct
+                // Parse the meta as well
+                info!("{:#?}", parsed.meta);
+
+                parsed
+                    .data
+                    .into_iter()
+                    .map(|payday2_mod| ModWithMeta {
+                        mod_data: Mod {
+                            id: payday2_mod.id,
+                            name: payday2_mod.name,
+                            description: payday2_mod.desc,
+                            downloads: payday2_mod.downloads,
+                            author: payday2_mod.user.name,
+                            has_download: payday2_mod.has_download,
+                            download_type: payday2_mod.download_type,
+                            thumbnail_url: payday2_mod.thumbnail.map(|t| t.file),
+                        },
+                        mod_meta: ModPageMetaData {
+                            per_page: parsed.meta.per_page,
+                            last_page: parsed.meta.last_page,
+                            current_page: parsed.meta.current_page,
+                            from: parsed.meta.from,
+                            to: parsed.meta.to,
+                            total: parsed.meta.total,
+                        },
+                    })
+                    .collect()
+            }
             Err(e) => {
                 error!("Failed to parse JSON: {e}");
+                trace!("{:#?}", &text);
                 return Vec::new();
             }
         }

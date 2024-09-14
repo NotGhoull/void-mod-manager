@@ -10,6 +10,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import GameSelector from "./GameSelector";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "./ui/pagination";
 
 function ModManager() {
   // State variables
@@ -24,25 +33,26 @@ function ModManager() {
     null
   );
 
+  async function loadMods() {
+    console.log("Loading mods...");
+    try {
+      const mods: ModInfo[] = await invoke("get_mods");
+      setMods(mods);
+      console.log(mods);
+    } catch (error) {
+      console.error("Failed to get mods:", error);
+      setHasErrored(true);
+      setErrorMessage("Failed to get mods: " + error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   // Effect hook to load mods and set up event listeners
   useEffect(() => {
     async function loadSettings() {
       setSettings(await invoke("load_settings"));
       console.log("Loaded settings!");
       console.log(settings);
-    }
-    async function loadMods() {
-      console.log("Loading mods...");
-      try {
-        const mods: ModInfo[] = await invoke("get_mods");
-        setMods(mods);
-      } catch (error) {
-        console.error("Failed to get mods:", error);
-        setHasErrored(true);
-        setErrorMessage("Failed to get mods: " + error);
-      } finally {
-        setIsLoading(false);
-      }
     }
 
     async function setupListeners() {
@@ -241,6 +251,36 @@ function ModManager() {
           )}
         </div>
       )}
+
+      {/* Pagination (TODO) */}
+      <Pagination>
+        <PaginationContent>
+          {/* Previous button */}
+          <PaginationItem>
+            <PaginationPrevious />
+          </PaginationItem>
+          {/* TODO programmatically add pages depending on response from mod.mod_meta */}
+          <PaginationItem>
+            <PaginationLink isActive>1</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink
+              onClick={() => {
+                toast("No");
+              }}
+            >
+              2
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink>3</PaginationLink>
+          </PaginationItem>
+          <PaginationEllipsis />
+          <PaginationItem>
+            <PaginationNext />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

@@ -10,22 +10,25 @@ export interface GameInformation {
     install_dir: string
 }
 
-// Define types for mod information and thumbnail
-export interface UserInfo {
-    name: string;
-};  
-export interface ModInfo {
+export interface ModDataInfo {
   id: number;
-  desc: string;
+  description: string;
   name: string;
   author: string;
-  user: UserInfo;
+  user: string;
   downloads?: number;
   has_download: boolean;
   download_type?: "link" | "file";
-  thumbnail: ThumbnailInfo;
+  thumbnail_url: string;
+}
+
+export interface ModMetaInfo {
+
+}
+
+// Define types for mod information and thumbnail  
+export interface ModInfo {
+  mod_data: ModDataInfo
+  mod_meta: ModMetaInfo
 };
   
-export interface ThumbnailInfo {
-  file: string;
-};
