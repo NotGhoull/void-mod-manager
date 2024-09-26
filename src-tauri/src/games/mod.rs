@@ -19,10 +19,10 @@ pub struct Mod {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ModPageMetaData {
     pub current_page: u32,
-    pub from: u32,
+    pub from: Option<u32>,
     pub last_page: u32,
     pub per_page: u32,
-    pub to: u32,
+    pub to: Option<u32>,
     pub total: u32,
 }
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -34,7 +34,7 @@ pub struct ModWithMeta {
 // Trait for a generic game mod API
 // TODO: Make these values more Universal
 pub trait GameModAPI {
-    async fn fetch_mods(&self) -> Vec<ModWithMeta>;
+    async fn fetch_mods(&self, query: Option<String>) -> Vec<ModWithMeta>;
     async fn get_mod_download_information(&self, id: u32) -> Result<Option<String>, String>;
     async fn impl_download_mod_from_id(&self, id: u32, window: tauri::Window)
         -> Result<(), String>;

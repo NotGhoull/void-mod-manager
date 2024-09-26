@@ -82,11 +82,14 @@ struct ModDownloadData {
 }
 
 impl GameModAPI for Payday2API {
-    async fn fetch_mods(&self) -> Vec<ModWithMeta> {
+    // TODO: make searching it's own function
+    async fn fetch_mods(&self, search_query: Option<String>) -> Vec<ModWithMeta> {
+        debug!("Query = {:#?}", search_query);
         // Create a client to use for connections
         let client = reqwest::Client::new();
         let body = json!({
-            "limit": 2
+            "limit": 10,
+            "query": search_query
         });
 
         info!("Attempting to fetch mods from ModworkshopAPI");
@@ -141,8 +144,8 @@ impl GameModAPI for Payday2API {
                             per_page: parsed.meta.per_page,
                             last_page: parsed.meta.last_page,
                             current_page: parsed.meta.current_page,
-                            from: parsed.meta.from,
-                            to: parsed.meta.to,
+                            from: Some(parsed.meta.from),
+                            to: Some(parsed.meta.to),
                             total: parsed.meta.total,
                         },
                     })

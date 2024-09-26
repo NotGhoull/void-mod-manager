@@ -4,7 +4,12 @@ import "../App.css";
 import { Button } from "./ui/button";
 import { listen } from "@tauri-apps/api/event";
 import { toast } from "sonner";
-import { AppSettings, GameInformation, ModInfo } from "../lib/types";
+import {
+  AppSettings,
+  GameInformation,
+  ModInfo,
+  ModMetaInfo,
+} from "../lib/types";
 import ModItem from "./ModItem";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Input } from "./ui/input";
@@ -19,7 +24,10 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "./ui/pagination";
-
+import {
+  CommandShortcut,
+} from "./ui/command";
+import ModManagerSearch from "./ModManagerSearch";
 function ModManager() {
   // State variables
   const [isLoading, setIsLoading] = useState(true);
@@ -33,11 +41,18 @@ function ModManager() {
     null
   );
 
+  const [baseModMeta, setBaseModMeta] = useState<ModMetaInfo>();
+  const [currentPage, setCurrentPage] = useState(1);
+
   async function loadMods() {
     console.log("Loading mods...");
     try {
       const mods: ModInfo[] = await invoke("get_mods");
       setMods(mods);
+      setBaseModMeta(mods[0].mod_meta);
+      if (baseModMeta) {
+        setCurrentPage(baseModMeta.current_page);
+      }
       console.log(mods);
     } catch (error) {
       console.error("Failed to get mods:", error);
@@ -47,6 +62,7 @@ function ModManager() {
       setIsLoading(false);
     }
   }
+
   // Effect hook to load mods and set up event listeners
   useEffect(() => {
     async function loadSettings() {
@@ -223,6 +239,15 @@ function ModManager() {
         </div>
       ) : null}
 
+      {/* <Input
+        type="text"
+        placeholder={`search (/)`}
+        className="w-full m-4 mr-5"
+        onClick={() => setCommandOpen(true)}
+      /> */}
+      <CommandShortcut>Open search /</CommandShortcut>
+      <ModManagerSearch mods={mods} />
+
       <GameSelector onGameSelect={setSelectedGame} />
       {selectedGame?.app_id == 218620 ? (
         <div className="grid gap-8 p-6">
@@ -253,34 +278,39 @@ function ModManager() {
       )}
 
       {/* Pagination (TODO) */}
-      <Pagination>
-        <PaginationContent>
-          {/* Previous button */}
-          <PaginationItem>
-            <PaginationPrevious />
-          </PaginationItem>
-          {/* TODO programmatically add pages depending on response from mod.mod_meta */}
-          <PaginationItem>
-            <PaginationLink isActive>1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink
-              onClick={() => {
-                toast("No");
-              }}
-            >
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink>3</PaginationLink>
-          </PaginationItem>
-          <PaginationEllipsis />
-          <PaginationItem>
-            <PaginationNext />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      {baseModMeta ? (
+        <Pagination>
+          <PaginationContent>
+            {/* Previous button */}
+            <PaginationItem>
+              <PaginationPrevious />
+            </PaginationItem>
+            {/* TODO programmatically add pages depending on response from mod.mod_meta */}
+            {currentPage - 1 <= 0 ? null : (
+              <PaginationItem>
+                <PaginationLink>{currentPage - 1}</PaginationLink>
+              </PaginationItem>
+            )}
+            <PaginationItem>
+              <PaginationLink
+                isActive
+                onClick={() => {
+                  toast("No");
+                }}
+              >
+                {currentPage}
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink>{currentPage + 1}</PaginationLink>
+            </PaginationItem>
+            <PaginationEllipsis />
+            <PaginationItem>
+              <PaginationNext />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      ) : null}
     </div>
   );
 }

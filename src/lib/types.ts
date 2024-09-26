@@ -23,7 +23,7 @@ export interface ModDataInfo {
 }
 
 export interface ModMetaInfo {
-
+  current_page: number;
 }
 
 // Define types for mod information and thumbnail  

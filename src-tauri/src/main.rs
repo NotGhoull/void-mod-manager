@@ -16,9 +16,11 @@ mod test;
 
 // TODO: Make this take in more arguments - Page, amount to show
 #[tauri::command]
-async fn get_mods() -> Vec<ModWithMeta> {
+async fn get_mods(query: Option<String>) -> Vec<ModWithMeta> {
     info!("Getting data...");
-    return Payday2API.fetch_mods().await;
+    debug!("Got search query {:#?}", query);
+
+    return Payday2API.fetch_mods(query).await;
 }
 
 #[tauri::command]
