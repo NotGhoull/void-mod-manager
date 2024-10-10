@@ -1,49 +1,38 @@
 {
+  "$schema": "https://schema.tauri.app/config/2.0.0",
+  "productName": "void-mod-manager",
+  "version": "0.2.0-dev",
+  "identifier": "com.void-mod-manager.app",
   "build": {
     "beforeDevCommand": "bun run dev",
+    "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "bun run build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist"
+    "frontendDist": "../dist"
   },
-  "package": {
-    "productName": "void-mod-manager",
-    "version": "0.1.2"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "shell": {
-        "all": false,
-        "open": true
-      }
-    },
+  "app": {
     "windows": [
       {
         "title": "void-mod-manager",
         "width": 800,
         "height": 600
+        
       }
     ],
     "security": {
       "csp": null
-    },
-    "bundle": {
-      "active": true,
-      "targets": "all",
-      "identifier": "com.void-mod-manager.app",
-      "publisher": "Ghoul",
-      "deb": {
-        "changelog": "debian/changelog"
-      },
-      "shortDescription": "A mod manager, no where near finished",
-      "longDescription": "0.1.2\nIt's just a mod manager, that's all this is (probably not a virus)",
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ]
     }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "shortDescription": "A mod manager, nowhere near finished (But it looks different now)",
+    "longDescription": "0.2.0-dev | Huge UI overhaul"
   }
 }
