@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0.0",
   "productName": "void-mod-manager",
-  "version": "0.2.0-dev",
+  "version": "0.2.0",
   "identifier": "com.void-mod-manager.app",
   "build": {
     "beforeDevCommand": "bun run dev",
@@ -14,8 +14,7 @@
       {
         "title": "void-mod-manager",
         "width": 800,
-        "height": 600
-        
+        "height": 600 
       }
     ],
     "security": {
