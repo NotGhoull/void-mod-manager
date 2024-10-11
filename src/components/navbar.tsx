@@ -42,21 +42,21 @@ export default function Navbar(props: NavbarProps) {
   >("mods");
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex w-full min-h-screen">
       {/* Left Sidebar (NavBar) */}
       <div
         className={`fixed top-0 left-0 h-full transition-all duration-300 ease-in-out border-r bg-muted/40 ${
           navbarCollapsed ? "w-[70px]" : "w-[220px] lg:w-[280px]"
         }`}
       >
-        <div className="flex h-full flex-col gap-4">
+        <div className="flex flex-col h-full gap-4">
           {/* Title */}
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             {!navbarCollapsed && (
               <p className="flex flex-col gap-0 font-semibold">
                 <span className="">Void mod manager</span>
                 <span className="text-sm text-muted-foreground">
-                  v0.0.0 - Dev branch
+                  v0.2.1 - Dev branch
                 </span>
               </p>
             )}
@@ -64,7 +64,7 @@ export default function Navbar(props: NavbarProps) {
 
           {/* Buttons & icons */}
           <div className="flex-1 overflow-hidden">
-            <nav className="grid items-start px-2 text-sm font-medium lg:px-4 gap-2">
+            <nav className="grid items-start gap-2 px-2 text-sm font-medium lg:px-4">
               <NavbarLink
                 text={"Mods"}
                 active={activeState == "mods"}
@@ -74,7 +74,7 @@ export default function Navbar(props: NavbarProps) {
                 }}
                 collapsed={navbarCollapsed}
               >
-                <PuzzleIcon className="h-4 w-4" />
+                <PuzzleIcon className="w-4 h-4" />
               </NavbarLink>
 
               <NavbarLink
@@ -88,7 +88,7 @@ export default function Navbar(props: NavbarProps) {
                 notificationAmount={"6"}
                 collapsed={navbarCollapsed}
               >
-                <CloudUpload className="h-4 w-4" />
+                <CloudUpload className="w-4 h-4" />
               </NavbarLink>
 
               <NavbarLink
@@ -100,7 +100,7 @@ export default function Navbar(props: NavbarProps) {
                 active={activeState == "mod_loader"}
                 collapsed={navbarCollapsed}
               >
-                <Package className="h-4 w-4" />
+                <Package className="w-4 h-4" />
               </NavbarLink>
 
               <NavbarLink
@@ -112,7 +112,7 @@ export default function Navbar(props: NavbarProps) {
                 active={activeState == "config_tweaker"}
                 collapsed={navbarCollapsed}
               >
-                <Wrench className="h-4 w-4" />
+                <Wrench className="w-4 h-4" />
               </NavbarLink>
 
               <NavbarLink
@@ -124,20 +124,20 @@ export default function Navbar(props: NavbarProps) {
                 active={activeState == "profiles"}
                 collapsed={navbarCollapsed}
               >
-                <Users className="h-4 w-4" />
+                <Users className="w-4 h-4" />
               </NavbarLink>
             </nav>
           </div>
-          <div className="mt-auto p-4 w-full">
+          <div className="w-full p-4 mt-auto">
             <NavbarLink
               text={"Close navbar"}
               onClick={() => setNavbarCollapsed(!navbarCollapsed)}
               collapsed={navbarCollapsed}
             >
-              <PanelLeftCloseIcon className="h-4 w-4" />
+              <PanelLeftCloseIcon className="w-4 h-4" />
             </NavbarLink>
             <NavbarLink text={"Settings"} collapsed={navbarCollapsed}>
-              <SettingsIcon className="h-4 w-4" />
+              <SettingsIcon className="w-4 h-4" />
             </NavbarLink>
           </div>
         </div>
@@ -153,14 +153,14 @@ export default function Navbar(props: NavbarProps) {
       >
         {/* Topbar */}
         <header className="sticky top-0 flex h-14 items-center gap-4 border-b bg-muted/40 backdrop-blur-md px-4 lg:h-[60px] lg:px-6">
-          <div className="w-full flex-1">
+          <div className="flex-1 w-full">
             <form>
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder="Search mods for Cyberpunk 2077..."
-                  className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
+                  className="w-full pl-8 shadow-none appearance-none bg-background md:w-2/3 lg:w-1/3"
                 />
               </div>
             </form>
