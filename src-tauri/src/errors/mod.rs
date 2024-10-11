@@ -1,2 +1,2 @@
 // Re-export error
-mod error;
+pub mod error;

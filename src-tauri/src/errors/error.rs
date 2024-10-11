@@ -5,6 +5,7 @@ use core::fmt;
 pub enum ModManagerError {
     NetworkError(String),
     FileSystemError(String),
+    ParseError(String),
 }
 
 impl fmt::Display for ModManagerError {
@@ -12,6 +13,7 @@ impl fmt::Display for ModManagerError {
         match self {
             ModManagerError::NetworkError(msg) => write!(f, "Network error: {}", msg),
             ModManagerError::FileSystemError(msg) => write!(f, "File system error: {}", msg),
+            ModManagerError::ParseError(msg) => write!(f, "JSON Parse error: {}", msg),
         }
     }
 }
