@@ -1,7 +1,10 @@
+use serde::Serialize;
+
+#[derive(Serialize)]
 pub struct Mod {
-    id: String,           // Unique ID for the mod
-    name: String,         // Name of the mod
-    version: String,      // Version information
-    download_url: String, // URL for downloading the mod
-    installed: bool,      // Whether the mod is installed or not.
+    pub id: i64,              // Unique ID for the mod
+    pub name: String,         // Name of the mod
+    pub version: i64,         // Version information
+    pub download_url: String, // URL for downloading the mod
+    pub installed: bool,      // Whether the mod is installed or not.
 }

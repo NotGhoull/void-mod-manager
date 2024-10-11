@@ -11,6 +11,8 @@ impl GameManager {
 
     pub fn load_game(&mut self, game: Box<dyn Game>) {
         self.games.push(game);
+        println!("[Debug -> Manager] Loaded a game");
+        println!("[Debug -> Manager] Listing games: {:?}", self.list_games());
     }
 
     pub fn execute_download(&self, game_name: &str, mod_id: String) -> Result<(), String> {

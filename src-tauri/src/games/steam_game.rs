@@ -8,7 +8,7 @@ pub struct SteamGame {
 
 // Example implimentation of a game
 impl Game for SteamGame {
-    fn get_mods(&self) -> Vec<Mod> {
+    fn get_mods(&self) -> Result<Vec<Mod>, Box<(dyn std::error::Error + 'static)>> {
         todo!()
     }
 

@@ -2,8 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 // Re-export everything here so they're in the tree
-mod games;
-mod mods;
 
 // This only exists to call void_mod_manager_lib::run()
 fn main() {
