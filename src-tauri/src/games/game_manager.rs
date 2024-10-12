@@ -15,7 +15,7 @@ impl GameManager {
         println!("[Debug -> Manager] Listing games: {:?}", self.list_games());
     }
 
-    pub fn execute_download(&self, game_name: &str, mod_id: String) -> Result<(), String> {
+    pub fn execute_download(&self, game_name: &str, mod_id: u32) -> Result<(), String> {
         if let Some(game) = self.get_game_by_name(game_name) {
             game.download_mod(mod_id).map_err(|e| e.to_string())
         } else {

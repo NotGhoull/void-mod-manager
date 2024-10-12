@@ -1,4 +1,5 @@
-use commands::payday2_commands::fetch_payday2_mods;
+use commands::payday2_commands::{download_payday2_mod, fetch_payday2_mods};
+
 use games::{game_manager::GameManager, payday2_game::Payday2Game};
 use mods::Mod;
 use tauri::{Runtime, State};
@@ -38,7 +39,8 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
             get_supported_games,
-            fetch_payday2_mods
+            fetch_payday2_mods,
+            download_payday2_mod
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

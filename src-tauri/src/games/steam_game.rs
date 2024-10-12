@@ -12,7 +12,7 @@ impl Game for SteamGame {
         todo!()
     }
 
-    fn download_mod(&self, mod_id: String) -> Result<(), String> {
+    fn download_mod(&self, mod_id: u32) -> Result<(), String> {
         todo!()
     }
 
