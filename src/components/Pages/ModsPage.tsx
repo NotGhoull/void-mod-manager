@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import ModCard from "../ModCard";
 import { Alert, AlertTitle } from "../ui/alert";
 import { TriangleAlertIcon } from "lucide-react";
+import PopoverCombobox from "../PopoverCombobox";
 
 interface Mod {
   id: number;
@@ -17,7 +18,7 @@ interface Mod {
 function ModsPage() {
   const [mods, setMods] = useState<Mod[]>([]);
   const [pageState, setPageState] = useState<"errored" | "ready" | "loading">(
-    "errored"
+    "loading"
   );
 
   useEffect(() => {
@@ -85,8 +86,9 @@ function ModsPage() {
           not trust the updater.
         </AlertTitle>
       </Alert>
-      <div className="flex items-center">
+      <div className="flex flex-col">
         <h1 className="text-lg font-semibold md:text-2xl">Mods for PAYDAY 2</h1>
+        {/* <PopoverCombobox /> */}
       </div>
 
       <div className="flex flex-1 p-8 pt-4 pb-4 border border-dashed rounded-lg shadow-sm">
@@ -94,6 +96,7 @@ function ModsPage() {
           {/* Mod Card */}
           {mods.map((mod) => (
             <ModCard
+              modId={mod.id}
               title={mod.name}
               description={mod.description}
               thumbnailLink={mod.thumbnail}

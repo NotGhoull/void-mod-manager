@@ -1,9 +1,20 @@
-import { DownloadCloudIcon, HeartIcon, UploadCloudIcon } from "lucide-react";
+import {
+  DownloadCloudIcon,
+  HeartIcon,
+  LoaderCircleIcon,
+  LoaderIcon,
+  TriangleAlertIcon,
+  UploadCloudIcon,
+} from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
+import { useState } from "react";
+import { PopoverArrow } from "@radix-ui/react-popover";
+import { invoke } from "@tauri-apps/api/core";
 
 interface ModCardProps {
+  modId: number;
   thumbnailLink: string;
   title: string;
   description: string;
@@ -15,6 +26,8 @@ interface ModCardProps {
 }
 
 function ModCard(props: ModCardProps) {
+  const [isModDownloading, setIsModDownloading] = useState(false);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -65,10 +78,31 @@ function ModCard(props: ModCardProps) {
       <PopoverContent className="flex flex-col gap-2 w-96">
         <div className="flex flex-col gap-0">
           <h1 className="text-xl font-bold text-foreground">Mod options</h1>
-          <p>Buttons don't work, since this isn't done yet</p>
+          {/* <p>Buttons don't work, since this isn't done yet</p> */}
+          <div className="flex flex-row items-center gap-1">
+            <TriangleAlertIcon className="w-5 h-5 text-orange-500" />
+            <p>PAYDAY2 install location is not valid.</p>
+          </div>
         </div>
         <Separator className="bg-foreground" />
-        <Button disabled>Download mod</Button>
+        <Button
+          onClick={async () => {
+            setIsModDownloading(true);
+            console.debug(`Would start downloading mod ${props.modId}`);
+            await invoke("download_payday2_mod", {
+              modId: props.modId,
+            });
+          }}
+          className="transition-all duration-300 ease-in-out"
+          disabled={isModDownloading}
+        >
+          {isModDownloading ? (
+            <LoaderCircleIcon className="w-4 h-4 animate-spin" />
+          ) : null}
+          <span className="pl-2">
+            Download{isModDownloading ? "ing" : ""} mod
+          </span>
+        </Button>
         <Button disabled variant={"outline"}>
           Update mod
         </Button>
