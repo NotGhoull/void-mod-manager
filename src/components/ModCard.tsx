@@ -2,7 +2,6 @@ import {
   DownloadCloudIcon,
   HeartIcon,
   LoaderCircleIcon,
-  LoaderIcon,
   TriangleAlertIcon,
   UploadCloudIcon,
 } from "lucide-react";
@@ -10,7 +9,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { useState } from "react";
-import { PopoverArrow } from "@radix-ui/react-popover";
 import { invoke } from "@tauri-apps/api/core";
 
 interface ModCardProps {

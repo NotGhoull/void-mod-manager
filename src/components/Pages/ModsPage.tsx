@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import ModCard from "../ModCard";
 import { Alert, AlertTitle } from "../ui/alert";
 import { TriangleAlertIcon } from "lucide-react";
-import PopoverCombobox from "../PopoverCombobox";
+// import PopoverCombobox from "../PopoverCombobox";
 
 interface Mod {
   id: number;

@@ -1,4 +1,3 @@
-import { CommandIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Command,
