@@ -1,5 +1,6 @@
 <div align="center">
 
+# THIS PROJECT HAS MOVED TO [GITLAB](https://gitlab.com/void-modding/app), ALL DEVELOPMENT IS DONE THERE NOW | https://gitlab.com/void-modding/app
 # Void Mod Manager
 
 [![License: GPLv3](https://img.shields.io/badge/licence-GPLv3-blue.svg?style=for-the-badge)](/LICENCE.md)
